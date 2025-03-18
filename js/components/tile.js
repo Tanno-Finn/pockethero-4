@@ -15,7 +15,10 @@ const TileComponent = (function() {
         this.type = config.type || 'unknown';
         this.color = config.color || '#000000';
         this.shape = config.shape || 'rectangle';
+
+        // Default: assume all tiles are walkable unless specifically configured otherwise
         this.walkable = config.walkable !== undefined ? config.walkable : true;
+
         this.propertyTags = config.propertyTags || [];
 
         // Add tags from tile properties
@@ -27,6 +30,9 @@ const TileComponent = (function() {
         for (const tag of this.propertyTags) {
             entity.addTag(tag);
         }
+
+        // For debugging
+        console.log(`Created tile: ${this.type}, walkable: ${this.walkable}, tags: ${this.propertyTags.join(', ')}`);
     }
 
     /**

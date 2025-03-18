@@ -41,6 +41,13 @@
       "color": "#d462d4",
       "shape": "circle",
       "tags": ["walkable", "teleporter"]
+    },
+    {
+      "id": "empty",
+      "name": "Empty",
+      "color": "#000000",
+      "shape": "rectangle",
+      "tags": ["walkable"]
     }
   ]
 }

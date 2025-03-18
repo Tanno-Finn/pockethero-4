@@ -241,12 +241,19 @@ const Game = (function() {
         // Create the zone
         const zone = Grid.createZone(zoneData.id, {
             width: zoneData.width,
-            height: zoneData.height
+            height: zoneData.height,
+            tiles: zoneData.tiles // Pass the tile array to the grid
         });
 
         // Create tile entities
         for (let y = 0; y < zoneData.height; y++) {
             for (let x = 0; x < zoneData.width; x++) {
+                // Make sure the tiles array exists and has data
+                if (!zoneData.tiles || !zoneData.tiles[y] || !zoneData.tiles[y][x]) {
+                    console.warn(`Missing tile data at (${x}, ${y}) in zone ${zoneData.id}`);
+                    continue;
+                }
+
                 const tileId = zoneData.tiles[y][x];
                 const tileType = _tileTypes[tileId];
 
@@ -279,35 +286,49 @@ const Game = (function() {
         }
 
         // Create entities
-        for (const entityData of zoneData.entities) {
-            const entityType = _entityTypes[entityData.type];
+        if (zoneData.entities && Array.isArray(zoneData.entities)) {
+            for (const entityData of zoneData.entities) {
+                // Skip if required fields are missing
+                if (!entityData.type || entityData.x === undefined || entityData.y === undefined) {
+                    console.warn('Skipping entity with missing required data', entityData);
+                    continue;
+                }
 
-            if (!entityType) {
-                console.error(`Entity type '${entityData.type}' not found`);
-                continue;
-            }
+                const entityType = _entityTypes[entityData.type];
 
-            // Create entity from template
-            const entity = EntityManager.createEntityFromTemplate(entityData.type, {
-                gridX: entityData.x,
-                gridY: entityData.y,
-                layer: Grid.LAYERS.ACTOR,
-                zoneId: zoneData.id,
-                properties: entityData.properties || {}
-            });
+                if (!entityType) {
+                    console.error(`Entity type '${entityData.type}' not found`);
+                    continue;
+                }
 
-            // Register entity on grid
-            Grid.registerEntity(
-                entity,
-                entityData.x,
-                entityData.y,
-                entity.layer,
-                zoneData.id
-            );
+                // Default to ACTOR layer if not specified
+                const layer = entityData.layer !== undefined ?
+                    entityData.layer :
+                    entityData.type === 'player' ? Grid.LAYERS.ACTOR :
+                        (entityData.type.includes('item') ? Grid.LAYERS.OBJECT : Grid.LAYERS.ACTOR);
 
-            // Store player entity reference
-            if (entityData.type === 'player') {
-                _player = entity;
+                // Create entity from template
+                const entity = EntityManager.createEntityFromTemplate(entityData.type, {
+                    gridX: entityData.x,
+                    gridY: entityData.y,
+                    layer: layer,
+                    zoneId: zoneData.id,
+                    properties: entityData.properties || {}
+                });
+
+                // Register entity on grid
+                Grid.registerEntity(
+                    entity,
+                    entityData.x,
+                    entityData.y,
+                    entity.layer,
+                    zoneData.id
+                );
+
+                // Store player entity reference
+                if (entityData.type === 'player') {
+                    _player = entity;
+                }
             }
         }
 
@@ -476,12 +497,40 @@ const Game = (function() {
             world: _player.position
         } : { grid: { x: 0, y: 0 }, world: { x: 0, y: 0 } };
 
+        // Check walkability of adjacent tiles for debugging
+        let walkabilityInfo = '';
+        if (_player) {
+            const px = _player.gridX;
+            const py = _player.gridY;
+            const directions = [
+                { name: 'Current', x: 0, y: 0 },
+                { name: 'Up', x: 0, y: -1 },
+                { name: 'Right', x: 1, y: 0 },
+                { name: 'Down', x: 0, y: 1 },
+                { name: 'Left', x: -1, y: 0 }
+            ];
+
+            walkabilityInfo = '<br><strong>Tile Info:</strong><br>';
+            directions.forEach(dir => {
+                const x = px + dir.x;
+                const y = py + dir.y;
+                const tileId = Grid.getTileAt(x, y);
+                const isWalk = Grid.isWalkable(x, y, [], ['solid']);
+                const tileEntities = Grid.getEntitiesAt(x, y, Grid.LAYERS.GROUND);
+                const tileEntity = tileEntities.length > 0 ? tileEntities[0] : null;
+                const tags = tileEntity && tileEntity.tags ? tileEntity.tags.join(', ') : 'none';
+
+                walkabilityInfo += `${dir.name} (${x},${y}): Tile=${tileId}, Walkable=${isWalk}, Tags=${tags}<br>`;
+            });
+        }
+
         _debugElement.innerHTML = `
             FPS: ${stats.fps}<br>
             State: ${StateManager.get('gameState')}<br>
             Zone: ${Grid.getCurrentZoneId()} (${currentZone.width}x${currentZone.height})<br>
             Player: ${Math.round(playerPos.grid.x)},${Math.round(playerPos.grid.y)} (${Math.round(playerPos.world.x)},${Math.round(playerPos.world.y)})<br>
             Entities: ${stats.entityCount}
+            ${walkabilityInfo}
         `;
     }
 

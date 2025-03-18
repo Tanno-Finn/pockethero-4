@@ -54,6 +54,7 @@ const Grid = (function() {
      * @param {Array} config.tiles - 2D array of tile references
      */
     function createZone(zoneId, config) {
+        // Create the base zone object
         _zones[zoneId] = {
             id: zoneId,
             width: config.width,
@@ -61,6 +62,17 @@ const Grid = (function() {
             tiles: config.tiles || [],
             entities: []
         };
+
+        // If tiles array is empty, initialize it with empty data
+        if (!_zones[zoneId].tiles || _zones[zoneId].tiles.length === 0) {
+            _zones[zoneId].tiles = [];
+            for (let y = 0; y < config.height; y++) {
+                _zones[zoneId].tiles[y] = [];
+                for (let x = 0; x < config.width; x++) {
+                    _zones[zoneId].tiles[y][x] = 'empty';
+                }
+            }
+        }
 
         // Initialize cells for this zone
         _cells[zoneId] = {};
@@ -196,6 +208,29 @@ const Grid = (function() {
         // Add entity to zone's entity list if not already there
         if (!_zones[zoneId].entities.includes(entity)) {
             _zones[zoneId].entities.push(entity);
+        }
+
+        // For tile entities, update the tile array as well
+        if (layer === LAYERS.GROUND && entity.hasComponent && entity.hasComponent('tile')) {
+            // Make sure the tile component's type is stored in the zones tiles array
+            const tileComp = entity.getComponent('tile');
+            if (tileComp && tileComp.type) {
+                // Ensure the tiles array exists and has the right dimensions
+                if (!_zones[zoneId].tiles) {
+                    _zones[zoneId].tiles = [];
+                }
+
+                while (_zones[zoneId].tiles.length <= y) {
+                    _zones[zoneId].tiles.push([]);
+                }
+
+                while (_zones[zoneId].tiles[y].length <= x) {
+                    _zones[zoneId].tiles[y].push('empty');
+                }
+
+                // Set the tile type
+                _zones[zoneId].tiles[y][x] = tileComp.type;
+            }
         }
 
         return true;
@@ -371,7 +406,13 @@ const Grid = (function() {
             return null;
         }
 
-        return _zones[zoneId].tiles[y][x];
+        // Safety check for undefined rows/tiles
+        if (!_zones[zoneId].tiles[y]) {
+            console.warn(`Missing tile row at y=${y} in zone ${zoneId}`);
+            return null;
+        }
+
+        return _zones[zoneId].tiles[y][x] || null;
     }
 
     /**
@@ -391,6 +432,11 @@ const Grid = (function() {
         // Check bounds
         if (x < 0 || y < 0 || x >= _zones[zoneId].width || y >= _zones[zoneId].height) {
             return false;
+        }
+
+        // Ensure the tiles array is properly initialized
+        if (!_zones[zoneId].tiles[y]) {
+            _zones[zoneId].tiles[y] = [];
         }
 
         _zones[zoneId].tiles[y][x] = tileId;
@@ -434,47 +480,66 @@ const Grid = (function() {
      * @returns {boolean} True if position is walkable
      */
     function isWalkable(x, y, requiredTags = [], excludedTags = [], zoneId = _currentZone) {
+        // Check if position is valid
         if (!isValidPosition(x, y, zoneId)) {
+            console.log(`Position (${x},${y}) is not valid`);
             return false;
         }
 
-        // Check tile
-        const tile = getTileAt(x, y, zoneId);
-        if (!tile) {
+        // Get tile at position
+        const tileId = getTileAt(x, y, zoneId);
+
+        // If no tile data, assume not walkable
+        if (!tileId) {
+            console.log(`No tile at position (${x},${y})`);
             return false;
         }
 
-        // Check required tags
-        if (requiredTags.length > 0) {
-            if (!tile.tags) {
-                return false;
+        // Get tile entity at this position (if available)
+        const tileEntities = getEntitiesAt(x, y, LAYERS.GROUND, zoneId);
+        const tileEntity = tileEntities.length > 0 ? tileEntities[0] : null;
+
+        // Default assumption: most tiles should be walkable
+        // This is a temporary fix until we properly set up all tile tags
+        let walkable = true;
+
+        // If we have a tile entity with tags, use them to determine walkability
+        if (tileEntity && tileEntity.tags) {
+            // Check for tiles that should block movement
+            if (tileEntity.tags.includes('water') ||
+                tileId === 'water' ||
+                tileId === 'teleporter') {
+                // For now, consider water and teleporter as non-walkable
+                walkable = false;
             }
 
-            for (const tag of requiredTags) {
-                if (!tile.tags.includes(tag)) {
-                    return false;
-                }
+            // Check if explicitly marked as walkable (overrides other checks)
+            if (tileEntity.tags.includes('walkable')) {
+                walkable = true;
             }
         }
 
         // Check excluded tags
-        if (excludedTags.length > 0 && tile.tags) {
+        if (excludedTags.length > 0 && tileEntity && tileEntity.tags) {
             for (const tag of excludedTags) {
-                if (tile.tags.includes(tag)) {
-                    return false;
+                if (tileEntity.tags.includes(tag)) {
+                    walkable = false;
+                    break;
                 }
             }
         }
 
-        // Check if there are any blocking entities
-        const entities = getEntitiesAt(x, y, LAYERS.OBJECT, zoneId);
-        for (const entity of entities) {
+        // Check if there are any blocking entities on object layer
+        const objectEntities = getEntitiesAt(x, y, LAYERS.OBJECT, zoneId);
+        for (const entity of objectEntities) {
             if (entity.tags && entity.tags.includes('solid')) {
-                return false;
+                walkable = false;
+                break;
             }
         }
 
-        return true;
+        console.log(`Walkability check for (${x},${y}): ${walkable} (tile: ${tileId})`);
+        return walkable;
     }
 
     /**

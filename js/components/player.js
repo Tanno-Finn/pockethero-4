@@ -27,8 +27,35 @@ const PlayerComponent = (function() {
         // Add player tag
         entity.addTag('player');
 
+        // Create handler function for input
+        const handleInput = (data) => {
+            if (!this.canMove || this.isMoving) {
+                return;
+            }
+
+            // Movement
+            if (data.action === InputManager.ACTIONS.MOVE_UP) {
+                this.move(entity, 0, -1);
+                this.direction = 'up';
+            } else if (data.action === InputManager.ACTIONS.MOVE_RIGHT) {
+                this.move(entity, 1, 0);
+                this.direction = 'right';
+            } else if (data.action === InputManager.ACTIONS.MOVE_DOWN) {
+                this.move(entity, 0, 1);
+                this.direction = 'down';
+            } else if (data.action === InputManager.ACTIONS.MOVE_LEFT) {
+                this.move(entity, -1, 0);
+                this.direction = 'left';
+            }
+
+            // Interaction
+            if (data.action === InputManager.ACTIONS.INTERACT) {
+                this.interact(entity);
+            }
+        };
+
         // Subscribe to input events
-        this._moveUpHandler = Events.subscribe(Events.EVENTS.KEY_DOWN, this._handleInput.bind(this, entity));
+        this._inputHandler = Events.subscribe(Events.EVENTS.KEY_DOWN, handleInput);
     }
 
     /**
@@ -38,41 +65,8 @@ const PlayerComponent = (function() {
      */
     function cleanup(entity) {
         // Unsubscribe from events
-        if (this._moveUpHandler) {
-            this._moveUpHandler();
-        }
-    }
-
-    /**
-     * Handle input events
-     *
-     * @param {Object} entity - Player entity
-     * @param {Object} data - Event data
-     * @private
-     */
-    function _handleInput(entity, data) {
-        if (!this.canMove || this.isMoving) {
-            return;
-        }
-
-        // Movement
-        if (data.action === InputManager.ACTIONS.MOVE_UP) {
-            this.move(entity, 0, -1);
-            this.direction = 'up';
-        } else if (data.action === InputManager.ACTIONS.MOVE_RIGHT) {
-            this.move(entity, 1, 0);
-            this.direction = 'right';
-        } else if (data.action === InputManager.ACTIONS.MOVE_DOWN) {
-            this.move(entity, 0, 1);
-            this.direction = 'down';
-        } else if (data.action === InputManager.ACTIONS.MOVE_LEFT) {
-            this.move(entity, -1, 0);
-            this.direction = 'left';
-        }
-
-        // Interaction
-        if (data.action === InputManager.ACTIONS.INTERACT) {
-            this.interact(entity);
+        if (this._inputHandler) {
+            this._inputHandler();
         }
     }
 

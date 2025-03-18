@@ -23,10 +23,64 @@ const InteractableComponent = (function() {
         // Add interactable tag
         entity.addTag('interactable');
 
+        // Create handler function for interaction
+        const handleInteraction = (data) => {
+            // Check if this entity is the target
+            if (data.target.id !== entity.id) {
+                return;
+            }
+
+            // Check if interaction direction is valid
+            if (!this.validDirections.includes(data.direction)) {
+                console.log(`Cannot interact with ${entity.type} from direction: ${data.direction}`);
+                return;
+            }
+
+            // Handle interaction based on type
+            switch (this.interactionType) {
+                case 'dialog':
+                    _handleDialogInteraction(this, entity, data);
+                    break;
+
+                case 'pickup':
+                    _handlePickupInteraction(this, entity, data);
+                    break;
+
+                case 'teleport':
+                    _handleTeleportInteraction(this, entity, data);
+                    break;
+
+                case 'toggle':
+                    _handleToggleInteraction(this, entity, data);
+                    break;
+
+                case 'custom':
+                    // Call custom handler if provided
+                    if (this.interactionData.handler) {
+                        this.interactionData.handler(entity, data);
+                    }
+                    break;
+
+                default:
+                    // Basic interaction - just trigger an event
+                    Events.publish('interaction:basic', {
+                        entity,
+                        actor: data.actor
+                    });
+                    break;
+            }
+
+            // Flash highlight
+            this.isHighlighted = true;
+            setTimeout(() => {
+                this.isHighlighted = false;
+            }, 300);
+        };
+
         // Subscribe to interaction events
         this._interactionHandler = Events.subscribe(
             Events.EVENTS.ENTITY_INTERACT,
-            this._handleInteraction.bind(this, entity)
+            handleInteraction
         );
     }
 
@@ -46,74 +100,15 @@ const InteractableComponent = (function() {
     }
 
     /**
-     * Handle interaction events
-     *
-     * @param {Object} entity - Entity this component belongs to
-     * @param {Object} data - Interaction data
-     * @private
-     */
-    function _handleInteraction(entity, data) {
-        // Check if this entity is the target
-        if (data.target.id !== entity.id) {
-            return;
-        }
-
-        // Check if interaction direction is valid
-        if (!this.validDirections.includes(data.direction)) {
-            console.log(`Cannot interact with ${entity.type} from direction: ${data.direction}`);
-            return;
-        }
-
-        // Handle interaction based on type
-        switch (this.interactionType) {
-            case 'dialog':
-                _handleDialogInteraction(entity, data);
-                break;
-
-            case 'pickup':
-                _handlePickupInteraction(entity, data);
-                break;
-
-            case 'teleport':
-                _handleTeleportInteraction(entity, data);
-                break;
-
-            case 'toggle':
-                _handleToggleInteraction(entity, data);
-                break;
-
-            case 'custom':
-                // Call custom handler if provided
-                if (this.interactionData.handler) {
-                    this.interactionData.handler(entity, data);
-                }
-                break;
-
-            default:
-                // Basic interaction - just trigger an event
-                Events.publish('interaction:basic', {
-                    entity,
-                    actor: data.actor
-                });
-                break;
-        }
-
-        // Flash highlight
-        this.isHighlighted = true;
-        setTimeout(() => {
-            this.isHighlighted = false;
-        }, 300);
-    }
-
-    /**
      * Handle dialog interaction
      *
+     * @param {Object} component - Interactable component
      * @param {Object} entity - Entity this component belongs to
      * @param {Object} data - Interaction data
      * @private
      */
-    function _handleDialogInteraction(entity, data) {
-        const dialogText = this.interactionData.text || `Interacted with ${entity.type}`;
+    function _handleDialogInteraction(component, entity, data) {
+        const dialogText = component.interactionData.text || `Interacted with ${entity.type}`;
 
         // Publish dialog open event
         Events.publish(Events.EVENTS.DIALOG_OPEN, {
@@ -126,16 +121,17 @@ const InteractableComponent = (function() {
     /**
      * Handle pickup interaction
      *
+     * @param {Object} component - Interactable component
      * @param {Object} entity - Entity this component belongs to
      * @param {Object} data - Interaction data
      * @private
      */
-    function _handlePickupInteraction(entity, data) {
+    function _handlePickupInteraction(component, entity, data) {
         // Publish pickup event
         Events.publish('interaction:pickup', {
             entity,
             actor: data.actor,
-            item: this.interactionData.item
+            item: component.interactionData.item
         });
 
         // Remove entity from grid
@@ -148,14 +144,15 @@ const InteractableComponent = (function() {
     /**
      * Handle teleport interaction
      *
+     * @param {Object} component - Interactable component
      * @param {Object} entity - Entity this component belongs to
      * @param {Object} data - Interaction data
      * @private
      */
-    function _handleTeleportInteraction(entity, data) {
-        const targetZone = this.interactionData.targetZone;
-        const targetX = this.interactionData.targetX;
-        const targetY = this.interactionData.targetY;
+    function _handleTeleportInteraction(component, entity, data) {
+        const targetZone = component.interactionData.targetZone;
+        const targetX = component.interactionData.targetX;
+        const targetY = component.interactionData.targetY;
 
         if (!targetZone || targetX === undefined || targetY === undefined) {
             console.error('Teleport interaction missing target data');
@@ -195,19 +192,20 @@ const InteractableComponent = (function() {
     /**
      * Handle toggle interaction
      *
+     * @param {Object} component - Interactable component
      * @param {Object} entity - Entity this component belongs to
      * @param {Object} data - Interaction data
      * @private
      */
-    function _handleToggleInteraction(entity, data) {
+    function _handleToggleInteraction(component, entity, data) {
         // Toggle state
-        this.interactionData.state = !this.interactionData.state;
+        component.interactionData.state = !component.interactionData.state;
 
         // Publish toggle event
         Events.publish('interaction:toggle', {
             entity,
             actor: data.actor,
-            state: this.interactionData.state
+            state: component.interactionData.state
         });
     }
 
