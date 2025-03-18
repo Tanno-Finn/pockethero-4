@@ -1,41 +1,41 @@
-# Development Session
+# Project Initialization
 
-Please continue development on my JavaScript game project. The repository contains all necessary information.
+I'm developing a game using native JavaScript without frameworks and need your assistance with architecture and implementation. I'll provide access to a GitHub repository where all work will be stored.
 
-## Core Instructions:
-1. Always review these key documentation files first:
-  - API_REFERENCE.md - Compact overview of all interfaces
-  - TODO.md - Current tasks and priorities
-  - CHANGELOG.md - Development history
+## Development Approach
+- This project will use a token-efficient development workflow
+- Core API information will be maintained in API_REFERENCE.md
+- All project information will be stored in repository files, not conversation history
+- After initial setup, future development sessions will start with new conversations
+- Documentation must be comprehensive enough to continue work in a new conversation
 
-2. For the specific task, examine only the directly relevant code files
+## Requirements:
+- All development must strictly follow the CODING_GUIDELINES.md in the repository
+- All code, comments, and documentation must be in English
+- Every file, function, class, and property must be well-documented according to the guidelines
+- Maintain and update the following documentation files with each significant change:
+    * README.md - Project overview, architecture, and file catalog
+    * TODO.md - Structured task tracking with session documentation
+    * CHANGELOG.md - Record of significant changes
+    * DESIGN.md - Architectural decisions and patterns
+    * CODING_GUIDELINES.md - Coding standards and practices
+    * API_REFERENCE.md - Compact overview of all modules, functions, classes, and data schemas
 
-3. Implement EXACTLY ONE task from TODO.md (highest priority) unless I specify otherwise
-  - Ensure it results in a stable, working build
-  - If I specify a different task than what's in TODO.md, prioritize my request and update TODO.md accordingly
+## Initial Development
+- Initial development will NOT use image sprites or audio files
+- Use native Canvas shapes and drawing operations (rectangles, circles, lines, etc.)
+- All game data must be separated from code and stored in JSON files
+- Each type of game data requires documented schema and validation
 
-4. No image sprites or audio files - use only Canvas shapes and drawing operations
+## For the first session, please:
+1. Review the initial CODING_GUIDELINES.md I've provided
+2. Understand my game requirements (which I'll describe next)
+3. Propose an initial architecture with justification in DESIGN.md
+4. Create the repository structure with essential files
+5. Implement a minimal viable prototype for the first milestone
+6. Include simple test cases according to the guidelines
+7. Document next steps in TODO.md with priorities and complexity estimates
+8. Create and populate API_REFERENCE.md with initial module interfaces
+9. Ensure all documentation is complete enough to continue in a new conversation
 
-5. Maintain strict separation between code and data:
-  - All game data in JSON files within the data/ directory
-  - Each new data type must include documented schema
-  - Update or create README.md in data subdirectories to explain schemas
-  - Include validation for all data loading
-
-6. Update all documentation comprehensively:
-  - Update API_REFERENCE.md with any new/modified functions, classes, or data schemas
-  - Update CHANGELOG.md with only the changes from THIS session
-  - Mark completed tasks in TODO.md and add any new identified tasks
-  - Update README.md if new files or interfaces were added
-  - Update DESIGN.md with any architectural decisions
-
-7. Provide complete file content for any changed or new files
-  - Always include the entire file, ready for copy-paste
-
-## Response Format:
-1. Brief summary of the task implemented
-2. Complete content of all changed/new files
-3. Summary of documentation updates
-4. Next recommended task(s)
-
-After this session completes, I will start a new conversation for the next development session.
+Here's my game concept: [GAME DESCRIPTION]
