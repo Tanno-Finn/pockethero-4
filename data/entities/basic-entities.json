@@ -1,0 +1,87 @@
+{
+  "entities": [
+    {
+      "id": "player",
+      "name": "Player",
+      "color": "#3498db",
+      "shape": "circle",
+      "size": 24,
+      "tags": ["actor", "player"],
+      "components": {
+        "player": {
+          "speed": 5,
+          "interactionRange": 1
+        }
+      }
+    },
+    {
+      "id": "npc_villager",
+      "name": "Villager",
+      "color": "#9b59b6",
+      "shape": "circle",
+      "size": 24,
+      "tags": ["actor", "npc", "interactable"],
+      "components": {
+        "interactable": {
+          "interactionType": "dialog",
+          "validDirections": ["up", "right", "down", "left"],
+          "interactionData": {
+            "text": "Hello traveler! Welcome to our village."
+          }
+        }
+      }
+    },
+    {
+      "id": "item_coin",
+      "name": "Coin",
+      "color": "#f1c40f",
+      "shape": "circle",
+      "size": 16,
+      "tags": ["item", "collectible", "interactable"],
+      "components": {
+        "interactable": {
+          "interactionType": "pickup",
+          "validDirections": ["up", "right", "down", "left"],
+          "interactionData": {
+            "item": "coin"
+          }
+        }
+      }
+    },
+    {
+      "id": "teleporter_door",
+      "name": "Door Teleporter",
+      "color": "#e74c3c",
+      "shape": "rectangle",
+      "size": 24,
+      "tags": ["object", "teleporter", "interactable"],
+      "components": {
+        "interactable": {
+          "interactionType": "teleport",
+          "validDirections": ["up", "right", "down", "left"],
+          "interactionData": {
+            "targetZone": "zone_2",
+            "targetX": 5,
+            "targetY": 5
+          }
+        }
+      }
+    },
+    {
+      "id": "tree",
+      "name": "Tree",
+      "color": "#27ae60",
+      "shape": "circle",
+      "size": 28,
+      "tags": ["object", "solid", "natural"]
+    },
+    {
+      "id": "rock",
+      "name": "Rock",
+      "color": "#7f8c8d",
+      "shape": "circle",
+      "size": 20,
+      "tags": ["object", "solid", "natural"]
+    }
+  ]
+}

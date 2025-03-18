@@ -1,0 +1,79 @@
+{
+  "id": "zone_1",
+  "name": "Meadow",
+  "width": 20,
+  "height": 15,
+  "tiles": [
+    ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "forest", "forest", "grass", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "forest", "forest", "forest", "forest", "forest", "forest", "forest", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "water", "water", "water", "grass", "grass", "forest", "forest", "forest", "forest", "forest", "forest", "forest", "forest", "forest", "forest", "grass", "grass"],
+    ["grass", "grass", "water", "water", "water", "water", "water", "grass", "forest", "forest", "forest", "forest", "forest", "forest", "forest", "forest", "forest", "forest", "grass", "grass"],
+    ["grass", "water", "water", "water", "water", "water", "water", "grass", "grass", "forest", "forest", "stone", "stone", "stone", "forest", "forest", "forest", "grass", "grass", "grass"],
+    ["grass", "grass", "water", "water", "water", "water", "grass", "grass", "grass", "grass", "forest", "stone", "stone", "stone", "forest", "forest", "grass", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "water", "water", "grass", "grass", "grass", "grass", "grass", "grass", "stone", "teleporter", "stone", "grass", "grass", "grass", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "stone", "stone", "stone", "grass", "grass", "grass", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "sand", "sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "grass", "grass", "grass", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "grass", "grass", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "grass", "grass", "grass", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "grass", "grass"],
+    ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"]
+  ],
+  "entities": [
+    {
+      "type": "player",
+      "x": 10,
+      "y": 10
+    },
+    {
+      "type": "npc_villager",
+      "x": 8,
+      "y": 10
+    },
+    {
+      "type": "item_coin",
+      "x": 12,
+      "y": 10
+    },
+    {
+      "type": "item_coin",
+      "x": 9,
+      "y": 12
+    },
+    {
+      "type": "teleporter_door",
+      "x": 12,
+      "y": 7
+    },
+    {
+      "type": "tree",
+      "x": 15,
+      "y": 3
+    },
+    {
+      "type": "tree",
+      "x": 16,
+      "y": 4
+    },
+    {
+      "type": "rock",
+      "x": 6,
+      "y": 12
+    },
+    {
+      "type": "rock",
+      "x": 14,
+      "y": 9
+    }
+  ],
+  "teleporters": [
+    {
+      "x": 12,
+      "y": 7,
+      "targetZone": "zone_2",
+      "targetX": 5,
+      "targetY": 5
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "tiles": [
+    {
+      "id": "grass",
+      "name": "Grass",
+      "color": "#7ccc5a",
+      "shape": "rectangle",
+      "tags": ["walkable", "natural"]
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "color": "#5a8ccc",
+      "shape": "rectangle",
+      "tags": ["water", "liquid"]
+    },
+    {
+      "id": "forest",
+      "name": "Forest",
+      "color": "#2d8035",
+      "shape": "circle",
+      "tags": ["walkable", "natural", "forest"]
+    },
+    {
+      "id": "stone",
+      "name": "Stone",
+      "color": "#8c8c8c",
+      "shape": "rectangle",
+      "tags": ["walkable", "obstacle"]
+    },
+    {
+      "id": "sand",
+      "name": "Sand",
+      "color": "#e6d56e",
+      "shape": "rectangle",
+      "tags": ["walkable", "natural"]
+    },
+    {
+      "id": "teleporter",
+      "name": "Teleporter",
+      "color": "#d462d4",
+      "shape": "circle",
+      "tags": ["walkable", "teleporter"]
+    }
+  ]
+}

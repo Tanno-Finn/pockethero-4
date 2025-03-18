@@ -1,0 +1,66 @@
+{
+  "id": "zone_2",
+  "name": "Cave",
+  "width": 15,
+  "height": 12,
+  "tiles": [
+    ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "stone", "stone", "stone", "teleporter", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "water", "water", "water", "water", "water", "water", "water", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "water", "water", "water", "water", "water", "water", "water", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "water", "water", "water", "water", "water", "water", "water", "stone", "stone", "stone", "stone", "stone", "stone"],
+    ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"]
+  ],
+  "entities": [
+    {
+      "type": "teleporter_door",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "type": "item_coin",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "type": "item_coin",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "type": "npc_villager",
+      "x": 10,
+      "y": 5
+    },
+    {
+      "type": "rock",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "type": "rock",
+      "x": 3,
+      "y": 3
+    },
+    {
+      "type": "rock",
+      "x": 12,
+      "y": 7
+    }
+  ],
+  "teleporters": [
+    {
+      "x": 5,
+      "y": 5,
+      "targetZone": "zone_1",
+      "targetX": 12,
+      "targetY": 7
+    }
+  ]
+}

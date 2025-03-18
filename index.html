@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grid World Game</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div id="game-container">
+  <canvas id="game-canvas"></canvas>
+  <div id="game-ui">
+    <!-- UI elements will be added here -->
+  </div>
+</div>
+
+<!-- Core modules -->
+<script src="js/utils/helpers.js"></script>
+<script src="js/utils/math.js"></script>
+<script src="js/core/event.js"></script>
+<script src="js/core/state.js"></script>
+<script src="js/core/loop.js"></script>
+<script src="js/input/input-manager.js"></script>
+<script src="js/rendering/shapes.js"></script>
+<script src="js/rendering/renderer.js"></script>
+<script src="js/rendering/camera.js"></script>
+<script src="js/core/grid.js"></script>
+<script src="js/core/entity.js"></script>
+<script src="js/components/tile.js"></script>
+<script src="js/components/player.js"></script>
+<script src="js/components/interactable.js"></script>
+<script src="js/interactions/interaction-manager.js"></script>
+<script src="js/data/validator.js"></script>
+<script src="js/data/loader.js"></script>
+<script src="js/core/game.js"></script>
+
+<!-- Main script to initialize the game -->
+<script>
+  // Initialize the game when the page loads
+  window.addEventListener('load', () => {
+    // Basic configuration
+    const config = {
+      canvasId: 'game-canvas',
+      width: 800,
+      height: 600,
+      gridCellSize: 32,
+      debug: true
+    };
+
+    // Initialize the game with config
+    Game.init(config);
+
+    // Start the game
+    Game.start();
+  });
+</script>
+</body>
+</html>

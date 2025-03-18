@@ -1,0 +1,8 @@
+{
+  "gameVersion": "0.1.0",
+  "dataTypes": [
+    "tiles",
+    "entities",
+    "zones"
+  ]
+}
